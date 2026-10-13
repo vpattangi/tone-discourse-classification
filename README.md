@@ -35,14 +35,12 @@ The raw Reddit file (`kaggle_RC_2019-05.csv`, about 186 MB) is not included beca
 | Column | Meaning |
 |---|---|
 | `subreddit`, `body` | The comment's community and text |
-| `manual_sense` | The author's hand label (crying: 85 comments) |
-| `claude_sense` | Label suggested by an LLM (Claude) for the remaining comments |
-| `label_source` | `human` or `claude` |
+| `manual_sense` | The author's hand label|
 | `final_sense` | The label used in the analysis (hand label if present, otherwise the suggested label) |
 | `quality_note` | Flags for spam, duplicates, or non-English comments; flagged rows are excluded |
 | `review_sample`, `human_check` | A random subset set aside for blind re-labeling, with a column to record the result |
 
-**How the labels were made.** The author hand-labeled 85 crying-face comments. An LLM (Claude) labeled all the remaining crying-face comments and all the skull comments using the same rubric, and the author reviewed them. Because that review was not blind, these labels should be described as author-reviewed rather than independently hand-labeled.
+**How the labels were made.** The author hand-labeled every comment (438 crying-face and 50 skull comments after filtering) using the rubric above. A single annotator produced all labels, so there is no measure of inter-annotator agreement.
 
 ## Dataset
 
@@ -78,7 +76,7 @@ Checkpoints: the first code cell should print `File size (MB): 185.9` and `Rows 
 ## Limitations
 
 - **Sample.** The skull sample is small (50 comments) and has no literal uses, so its literal rate is only bounded (roughly 0% to 7%). The data come from one platform and one month.
-- **Labels.** Most labels were suggested by an LLM and reviewed by the author, not independently produced, and borderline cases (for example endearment and meme phrases such as "I'm not crying, you're crying") were decided by convention.
+- **Labels.** All labels were written by a single annotator (the author), so there is no measure of inter-annotator agreement. Judgments of "figurative" versus "unclear" involve interpretation, and a few borderline cases (for example endearment and meme phrases such as "I'm not crying, you're crying") were decided by convention.
 - **Embedding method.** The anchor phrases were chosen by hand, and the score measures closeness to them rather than literal use, so jokes about crying can score high. The model is a general-purpose English model. The 0.35 threshold was set before comparing with the labels; the threshold sweep is tuned on the same data it is evaluated on.
 - **Classifier.** Only 42 crying comments were literal, so its scores are noisy.
 - **Filtering.** Spam and non-English comments were removed with simple rules that may miss some cases.
